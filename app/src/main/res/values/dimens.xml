@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="item_message_margin">100dp</dimen>
+    <dimen name="recipient_phone_number_label_margin">4dp</dimen>
+    <dimen name="parent_margin">8dp</dimen>
+    <dimen name="container_elements_margin">8dp</dimen>
+
+    <dimen name="parent_padding">8dp</dimen>
+
+    <dimen name="card_corner_radius">4dp</dimen>
+    <dimen name="card_elevation">4dp</dimen>
+</resources>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <variable
+            name="message"
+            type="ru.geekbrains.android.level2.valeryvpetrov.data.model.Message" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/parent_margin"
+        android:layout_marginEnd="@dimen/item_message_margin"
+        android:layout_marginBottom="@dimen/parent_margin"
+        android:background="@drawable/item_message_incoming"
+        android:elevation="@dimen/card_elevation"
+        android:orientation="vertical"
+        android:padding="@dimen/parent_padding">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/sender_phone_number_label"
+                android:theme="@style/Message.Incoming" />
+
+            <TextView
+                android:id="@+id/sender_phone_number"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/recipient_phone_number_label_margin"
+                android:text="@{message.sender.phoneNumber}"
+                android:theme="@style/Message.Incoming" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/message_text"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/container_elements_margin"
+            android:text="@{message.text}"
+            android:theme="@style/Message.Incoming" />
+    </LinearLayout>
+</layout>

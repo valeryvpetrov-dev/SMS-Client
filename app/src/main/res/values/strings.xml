@@ -1,3 +1,14 @@
 <resources>
-    <string name="app_name">GeekBrains.Android.Level-2</string>
+    <string name="app_name">SMS client</string>
+
+    <string name="send_content_description">Send message</string>
+
+    <string name="recipient_phone_number_hint">Recipient phone number</string>
+    <string name="message_text_hint">Message</string>
+
+    <string name="sender_phone_number_label">from:</string>
+    <string name="recipient_phone_number_outgoing_label">to:</string>
+    <string name="action_show_sms">Show SMS</string>
+    <string name="channel_incoming_sms_name">Incoming SMS</string>
+    <string name="channel_incoming_sms_description">Incoming SMS channel</string>
 </resources>
