@@ -37,4 +37,9 @@ public class MessageRepository implements IRepository<Message> {
         return realmMessageRepository.readAll();
     }
 
+    @Override
+    public void delete(Message message) {
+        realmMessageRepository.delete(message);
+    }
+
 }

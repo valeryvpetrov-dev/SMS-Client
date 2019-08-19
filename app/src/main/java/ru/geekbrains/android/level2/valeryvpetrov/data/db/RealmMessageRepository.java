@@ -42,4 +42,14 @@ public class RealmMessageRepository implements IRepository<Message> {
                 .findAll());
     }
 
+    @Override
+    public void delete(@NonNull Message item) {
+        realm.executeTransaction(_realm -> {
+            Message itemToDelete = _realm
+                    .where(Message.class)
+                    .findFirst();
+            if (itemToDelete != null)
+                itemToDelete.deleteFromRealm();
+        });
+    }
 }

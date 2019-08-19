@@ -8,9 +8,9 @@ import androidx.lifecycle.ViewModel;
 
 import java.util.List;
 
-import ru.geekbrains.android.level2.valeryvpetrov.data.IRepository;
 import ru.geekbrains.android.level2.valeryvpetrov.data.MessageRepository;
 import ru.geekbrains.android.level2.valeryvpetrov.data.model.Message;
+import ru.geekbrains.android.level2.valeryvpetrov.util.SmsUtil;
 
 @MainThread
 public class MainActivityViewModel
@@ -19,20 +19,29 @@ public class MainActivityViewModel
     private MutableLiveData<List<Message>> messages;
 
     @NonNull
-    private IRepository<Message> messageRepository;
+    private MessageRepository messageRepository;
+
+    @NonNull
+    private SmsUtil smsUtil;
 
     public MainActivityViewModel() {
         super();
         messageRepository = MessageRepository.getInstance();
+        smsUtil = SmsUtil.getInstance();
     }
 
     @NonNull
     public LiveData<List<Message>> getMessages() {
         if (messages == null) {
             messages = new MutableLiveData<>();
-            getMessagesFromDB();
+            messages.setValue(messageRepository.readAll());
         }
         return messages;
+    }
+
+    @NonNull
+    public String getUserMobilePhone() {
+        return smsUtil.getUserPhoneNumber();
     }
 
     /**
@@ -41,17 +50,24 @@ public class MainActivityViewModel
      * @param message - validated message (message.isLogicValid() == true)
      */
     public void sendMessage(@NonNull Message message) {
+        messageRepository.create(message);
         if (messages.getValue() != null) {
             messages.getValue().add(message);
-            addMessageToDB(message);
+            smsUtil.sendSms(message);
         }
     }
 
-    private void getMessagesFromDB() {
-        messages.setValue(messageRepository.readAll());
+    public void receiveSms(@NonNull Message message) {
+        messageRepository.create(message);
+        if (messages.getValue() != null) {
+            messages.getValue().add(message);
+        }
     }
 
-    private void addMessageToDB(@NonNull Message message) {
-        messageRepository.create(message);
+    public void deleteSms(@NonNull Message message) {
+        messageRepository.delete(message);
+        if (messages.getValue() != null) {
+            messages.getValue().remove(message);
+        }
     }
 }

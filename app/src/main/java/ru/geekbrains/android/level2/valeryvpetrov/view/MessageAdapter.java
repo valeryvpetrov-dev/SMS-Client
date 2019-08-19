@@ -2,16 +2,15 @@ package ru.geekbrains.android.level2.valeryvpetrov.view;
 
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
 
 import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
-import androidx.databinding.ViewDataBinding;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ru.geekbrains.android.level2.valeryvpetrov.R;
@@ -20,7 +19,7 @@ import ru.geekbrains.android.level2.valeryvpetrov.databinding.ItemMessageIncomin
 import ru.geekbrains.android.level2.valeryvpetrov.databinding.ItemMessageOutgoingBinding;
 
 @MainThread
-public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHolder> {
+public class MessageAdapter extends RecyclerView.Adapter<MessageViewHolder> {
 
     private static final int VIEW_TYPE_OUTGOING_MESSAGE = 0;
     private static final int VIEW_TYPE_INCOMING_MESSAGE = 1;
@@ -28,28 +27,32 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     @Nullable
     private List<Message> messages;
 
-    public MessageAdapter() {
-        setHasStableIds(true);
+    @NonNull
+    private String userPhoneNumber;
+
+    public MessageAdapter(@NonNull String userMobilePhone) {
+        this.userPhoneNumber = userMobilePhone;
     }
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public MessageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater
                 .from(parent.getContext());
-        ViewDataBinding itemDataBinding;
+
         if (viewType == VIEW_TYPE_OUTGOING_MESSAGE) {   // outgoing message
-            itemDataBinding = DataBindingUtil
+            ItemMessageOutgoingBinding itemDataBinding = DataBindingUtil
                     .inflate(layoutInflater, R.layout.item_message_outgoing, parent, false);
+            return new MessageViewHolder.OutgoingMessageViewHolder(itemDataBinding);
         } else {                                        // incoming message
-            itemDataBinding = DataBindingUtil
+            ItemMessageIncomingBinding itemDataBinding = DataBindingUtil
                     .inflate(layoutInflater, R.layout.item_message_incoming, parent, false);
+            return new MessageViewHolder.IncomingMessageViewHolder(itemDataBinding);
         }
-        return new ViewHolder(itemDataBinding, viewType);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MessageViewHolder holder, int position) {
         if (messages != null && messages.size() > position)
             holder.bind(messages.get(position));
     }
@@ -63,13 +66,12 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
     public int getItemViewType(int position) {
         if (messages != null && messages.size() > position) {
             Message message = messages.get(position);
-            // TODO check if phone number belongs to user
-            if (message.getRecipient().getPhoneNumber().equals("0"))
+            if (message.getRecipient().getPhoneNumber().equals(userPhoneNumber))
                 return VIEW_TYPE_INCOMING_MESSAGE;
-            if (message.getRecipient().getPhoneNumber().equals("1"))
+            else
                 return VIEW_TYPE_OUTGOING_MESSAGE;
         }
-        return -1;
+        return super.getItemViewType(position);
     }
 
     public void update(@NonNull List<Message> messages) {
@@ -104,44 +106,9 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         }
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
-
-        @NonNull
-        private ViewDataBinding dataBinding;
-        private int viewType;
-
-        public ViewHolder(@NonNull ViewDataBinding dataBinding, int viewType) {
-            super(dataBinding.getRoot());
-            this.dataBinding = dataBinding;
-            this.viewType = viewType;
-        }
-
-        public void bind(@NonNull Message message) {
-            if (viewType == VIEW_TYPE_OUTGOING_MESSAGE) {
-                bindOutgoingMessage(((ItemMessageOutgoingBinding) dataBinding), message);
-            }
-            if (viewType == VIEW_TYPE_INCOMING_MESSAGE) {
-                bindIncomingMessage(((ItemMessageIncomingBinding) dataBinding), message);
-            }
-        }
-
-        private void bindOutgoingMessage(@NonNull ItemMessageOutgoingBinding dataBinding,
-                                         @NonNull Message message) {
-            dataBinding.setMessage(message);
-            dataBinding.executePendingBindings();
-
-            itemView.setAnimation(AnimationUtils
-                    .loadAnimation(itemView.getContext(), R.anim.item_message_outgoing));
-        }
-
-        private void bindIncomingMessage(@NonNull ItemMessageIncomingBinding dataBinding,
-                                         @NonNull Message message) {
-            dataBinding.setMessage(message);
-            dataBinding.executePendingBindings();
-
-            itemView.setAnimation(AnimationUtils
-                    .loadAnimation(itemView.getContext(), R.anim.item_message_incoming));
-        }
+    @Nullable
+    public Message getMessage(int position) {
+        if (this.messages == null) return null;
+        return this.messages.get(position);
     }
-
 }

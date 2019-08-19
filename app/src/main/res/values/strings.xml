@@ -8,7 +8,8 @@
 
     <string name="sender_phone_number_label">from:</string>
     <string name="recipient_phone_number_outgoing_label">to:</string>
-    <string name="action_show_sms">Show SMS</string>
+    <string name="action_show_sms">Show</string>
     <string name="channel_incoming_sms_name">Incoming SMS</string>
     <string name="channel_incoming_sms_description">Incoming SMS channel</string>
+    <string name="error_no_permission_sms">No permission to handle SMS</string>
 </resources>
